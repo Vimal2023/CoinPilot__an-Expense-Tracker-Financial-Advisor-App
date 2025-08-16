@@ -1,123 +1,109 @@
-<div align="center">
-  <br />
-    <a href="https://youtu.be/dGHFV_RMGag" target="_blank">
-      <img src="https://i.postimg.cc/tJsYLQcP/test1.jpg" alt="Project Banner">
-    </a>
-  
-  <br />
+# CoinPilot
 
-  <div>
-    <img src="https://img.shields.io/badge/-TypeScript-black?style=for-the-badge&logoColor=white&logo=typescript&color=3178C6" alt="typescript" />
-    <img src="https://img.shields.io/badge/-Next_JS-black?style=for-the-badge&logoColor=white&logo=nextdotjs&color=000000" alt="nextdotjs" />
-    <img src="https://img.shields.io/badge/-Tailwind_CSS-black?style=for-the-badge&logoColor=white&logo=tailwindcss&color=06B6D4" alt="tailwindcss" />
-  </div>
+CoinPilot is an AI-driven personal finance advisor web application built with Next.js, Tailwind CSS, Shadcn UI, Clerk for authentication, Drizzle ORM with Neon for PostgreSQL database management, and Open AI's GPT-4 for financial advice. It allows users to track budgets, expenses, and income, visualize spending through charts, and receive personalized financial insights.
 
-  <h3 align="center">Finan Smart</h3>
+## Features
 
-   <div align="center">
-     Build this project step by step with our detailed tutorial on <a href="https://www.youtube.com/@albertmends" target="_blank"><b>Your YouTube Channel</b></a>. Join the community!
-    </div>
-</div>
+- **Dashboard**: Displays a summary of total budget, total spent, number of budgets, and income streams, with a bar chart for spending visualization.
+- **Budget Management**: Create and manage budgets with customizable names, amounts, and emoji icons.
+- **Expense Tracking**: Add and view expenses linked to specific budgets, with a list of recent expenses.
+- **Income Tracking**: Record and aggregate income sources for financial overview.
+- **AI-Powered Financial Advice**: Uses Open AI's GPT-4 to provide concise, data-driven financial advice based on user inputs.
+- **Authentication**: Secure user login and signup with Clerk, supporting Google and other providers.
+- **Responsive Design**: Built with Tailwind CSS and Shadcn UI for a polished, mobile-friendly interface.
+- **Database Integration**: Uses Drizzle ORM with Neon PostgreSQL for efficient data storage and retrieval.
+- **Visualizations**: Includes a bar chart (via `react-chart`) to visualize spending patterns.
 
-## 📋 <a name="table">Table of Contents</a>
+## Tech Stack
 
-1. 🤖 [Introduction](#introduction)
-2. ⚙️ [Tech Stack](#tech-stack)
-3. 🔋 [Features](#features)
-4. 🤸 [Quick Start](#quick-start)
-5. 🕸️ [Assets & Code](#snippets)
-6. 🚀 [More](#more)
+- **Frontend**: Next.js, React, Tailwind CSS, Shadcn UI, Lucide React (icons), Aceternity UI (mockup)
+- **Backend**: Drizzle ORM, Neon (PostgreSQL)
+- **Authentication**: Clerk
+- **AI Integration**: Open AI API (GPT-4)
+- **Charts**: React Chart
+- **Others**: Framer Motion (animations), TypeScript/JavaScript
 
-## 🚨 Tutorial
 
-This repository contains the code corresponding to an in-depth tutorial available on our YouTube channel, <a href="https://www.youtube.com/@albertmends/videos" target="_blank"><b>Code with Albert</b></a>.
+## Installation
 
-If you prefer visual learning, this is the perfect resource for you. Follow our tutorial to learn how to build projects like these step-by-step in a beginner-friendly manner!
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/your-username/coinpilot.git
+   cd coinpilot
+   ```
 
-## <a name="introduction">🤖 Introduction</a>
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+   or
+   ```bash
+   yarn install
+   ```
 
-Built with the latest Next.js and TypeScript, Finan Smart is an advanced AI financial advice tool. It allows users to input their income, expenses, and budgets, and receive personalized financial advice based on their financial data. This project is perfect for those looking to learn how to integrate AI-driven insights and financial management into a Next.js application.
+3. **Set Up Environment Variables**:
+   Create a `.env.local` file in the root directory and add the following:
+   ```env
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+   CLERK_SECRET_KEY=your_clerk_secret_key
+   NEXT_PUBLIC_DATABASE_URL=your_neon_database_url
+   NEXT_PUBLIC_OPEN_AI_API_KEY=your_open_ai_api_key
+   NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+   NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+   NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+   NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+   ```
+   - Obtain `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from the [Clerk Dashboard](https://dashboard.clerk.dev).
+   - Get `NEXT_PUBLIC_DATABASE_URL` from the [Neon Console](https://console.neon.tech).
+   - Acquire `NEXT_PUBLIC_OPEN_AI_API_KEY` from [Open AI](https://platform.openai.com).
 
-If you're getting started and need assistance or face any bugs, join our active Discord community. It's a place where people help each other out.
+4. **Set Up Database**:
+   - Log in to [Neon Console](https://console.neon.tech) and create a new project (e.g., `coinpilot`).
+   - Copy the database connection string and add it to `.env.local`.
+   - Define the database schema in `utils/schema.jsx`:
+     ```javascript
+     import { pgTable, serial, varchar, integer, numeric } from "drizzle-orm/pg-core";
 
-<a href="https://discord.com/channels/1221368900579754074/1221368901162631243" target="_blank"><img src="https://github.com/sujatagunale/EasyRead/assets/151519281/618f4872-1e10-42da-8213-1d69e486d02e"  /></a>
+     export const budget = pgTable("budget", {
+       id: serial("id").primaryKey(),
+       name: varchar("name").notNull(),
+       amount: numeric("amount").notNull(),
+       icon: varchar("icon"),
+       createdBy: varchar("createdBy").notNull(),
+     });
 
-## <a name="tech-stack">⚙️ Tech Stack</a>
+     export const incomes = pgTable("incomes", {
+       id: serial("id").primaryKey(),
+       name: varchar("name").notNull(),
+       amount: numeric("amount").notNull(),
+       icon: varchar("icon"),
+       createdBy: varchar("createdBy").notNull(),
+     });
 
-- Next.js
-- TypeScript
-- OpenAI API
-- Tailwind CSS
+     export const expenses = pgTable("expenses", {
+       id: serial("id").primaryKey(),
+       name: varchar("name").notNull(),
+       amount: numeric("amount").notNull(),
+       createdBy: varchar("createdBy").notNull(),
+       budgetId: integer("budgetId").references(() => budget.id),
+       createdAt: varchar("createdAt"),
+     });
+     ```
+   - Push the schema to Neon:
+     ```bash
+     npm run db:push
+     ```
 
-## <a name="features">🔋 Features</a>
+5. **Run the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   or
+   ```bash
+   yarn dev
+   ```
+   Open `http://localhost:3000` in your browser to view the app.
 
-👉 **Income and Expense Input**: Allows users to input their income and expenses.
-
-👉 **Budget Management**: Enables users to manage their budgets effectively.
-
-👉 **Personalized Financial Advice**: Provides detailed financial advice based on user-specific financial data using OpenAI's GPT-4 model.
-
-👉 **Responsive Design**: Ensures a seamless experience across different devices.
-
-## <a name="quick-start">🤸 Quick Start</a>
-
-Follow these steps to set up the project locally on your machine.
-
-**Prerequisites**
-
-Make sure you have the following installed on your machine:
-
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/en)
-- [npm](https://www.npmjs.com/) (Node Package Manager)
-
-**Cloning the Repository**
-
-```bash
-git clone https://github.com/mendsalbert/ai-finance-trackingt.git
-cd ai-finance-tracking
-```
-
-**Installation**
-
-Install the project dependencies using npm:
-
-```bash
-npm install
-```
-
-**Set Up Environment Variables**
-
-Create a new file named `.env` in the root of your project and add the following content:
-
-```env
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=p
-CLERK_SECRET_KEY=
-
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
-NEXT_PUBLIC_OPENAI_API_KEY=
-
-NEXT_PUBLIC_DATABASE_URL=
-
-```
-
-Replace the placeholder values with your actual OpenAI credentials. You can obtain these credentials by signing up on the [OpenAI website](https://openai.com/).
-
-**Running the Project**
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
-
-## <a name="snippets">🕸️ Assets & Code</a>
-
-The repository includes all the assets and code you need to get started with Finan Smart. Follow along with our YouTube tutorial for a step-by-step guide.
-
-## <a name="more">🚀 More</a>
-
-For more information and additional resources, check out our YouTube channel and join our Discord community for support and discussions.
+recharts.org) for data visualization.
+- [Aceternity UI](https://ui.aceternity.com) for tablet mockup.
+- [Lucide React](https://lucide.dev) for icons.
