@@ -22,7 +22,7 @@ function Header() {
             </Button>
           </Link>
           <Link href={"/sign-in"}>
-            <Button className="rounded-full">Get Started</Button>
+            <Button className="rounded-full bg-green-800">Get Started</Button>
           </Link>
         </div>
       )}
