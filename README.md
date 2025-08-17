@@ -1,6 +1,9 @@
 # CoinPilot
 
-CoinPilot is an AI-driven personal finance advisor web application built with Next.js, Tailwind CSS, Shadcn UI, Clerk for authentication, Drizzle ORM with Neon for PostgreSQL database management, and Open AI's GPT-4 for financial advice. It allows users to track budgets, expenses, and income, visualize spending through charts, and receive personalized financial insights.
+CoinPilot is an AI-driven personal finance advisor web application built with Next.js, Tailwind CSS, Shadcn UI, Clerk for authentication, Drizzle ORM with Neon for PostgreSQL database management, and 
+ Open AI's GPT-4 for financial advice. It allows users to track budgets, expenses, and income, visualize spending through charts, and receive personalized financial insights.
+
+<img width="1587" height="2245" alt="posting" src="https://github.com/user-attachments/assets/0479f561-d845-4c71-a652-83a09c088f17" />
 
 ## Features
 
