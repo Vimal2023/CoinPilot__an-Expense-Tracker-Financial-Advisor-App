@@ -24,7 +24,7 @@ function Hero() {
       {/* ── Top strip — full-bleed gradient bar ── */}
       <div className="h-1 w-full bg-gradient-to-r from-green-800 via-emerald-500 to-green-400" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-16">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-10 pb-16">
 
         {/* ── Feature pills ── */}
         <div className="flex flex-wrap gap-2 mb-8">
