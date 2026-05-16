@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import Groq from "groq-sdk";
 
+export const runtime = "nodejs";
+
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 const SYSTEM_PROMPT = `You are a concise B2B financial intelligence engine for agency finance teams.
@@ -20,21 +22,21 @@ export async function POST(request) {
     // Guard: return a sensible default if values are all zero (no data yet)
     if (!totalBudget && !totalIncome && !totalSpend) {
       return NextResponse.json({
-        advice: "Add your first Project Allocation and Revenue Stream to receive AI-powered cashflow insights tailored to your agency.",
+        advice:
+          "Add your first Project Allocation and Revenue Stream to receive AI-powered cashflow insights tailored to your agency.",
       });
     }
 
-    const utilizationRate = totalBudget > 0
-      ? ((totalSpend / totalBudget) * 100).toFixed(1)
-      : "N/A";
+    const utilizationRate =
+      totalBudget > 0 ? ((totalSpend / totalBudget) * 100).toFixed(1) : "N/A";
 
-    const revenueCoverage = totalSpend > 0
-      ? ((totalIncome / totalSpend) * 100).toFixed(1)
-      : "N/A";
+    const revenueCoverage =
+      totalSpend > 0 ? ((totalIncome / totalSpend) * 100).toFixed(1) : "N/A";
 
-    const netMargin = totalIncome > 0
-      ? (((totalIncome - totalSpend) / totalIncome) * 100).toFixed(1)
-      : "N/A";
+    const netMargin =
+      totalIncome > 0
+        ? (((totalIncome - totalSpend) / totalIncome) * 100).toFixed(1)
+        : "N/A";
 
     const userPrompt =
       `Analyze the following agency financial snapshot and provide 2-sentence business advice:\n` +
@@ -51,7 +53,7 @@ export async function POST(request) {
       max_tokens: 200,
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
-        { role: "user",   content: userPrompt },
+        { role: "user", content: userPrompt },
       ],
     });
 
@@ -62,7 +64,8 @@ export async function POST(request) {
     console.error("[financial-advice]", err);
     // Return a graceful fallback — never crash the dashboard
     return NextResponse.json({
-      advice: "Revenue coverage and allocation efficiency look healthy — review your largest operational cost categories to identify further optimisation opportunities.",
+      advice:
+        "Revenue coverage and allocation efficiency look healthy — review your largest operational cost categories to identify further optimisation opportunities.",
     });
   }
 }
