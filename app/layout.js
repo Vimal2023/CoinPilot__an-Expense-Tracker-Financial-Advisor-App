@@ -6,7 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "CoinPilot",
+  title: "FinanSmart",
   description: "an Expense Tracker & Financial Advisor App",
 };
 

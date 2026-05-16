@@ -14,38 +14,37 @@ import EmojiPicker from "emoji-picker-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { db } from "@/utils/dbConfig";
-import { Incomes } from "@/utils/schema";
+import { revenueStreams } from "@/utils/schema";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 function CreateIncomes({ refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
-
   const [name, setName] = useState();
   const [amount, setAmount] = useState();
-
   const { user } = useUser();
 
   /**
-   * Used to Create New Budget
+   * Used to Create New Revenue Stream
    */
   const onCreateIncomes = async () => {
     const result = await db
-      .insert(Incomes)
+      .insert(revenueStreams)
       .values({
         name: name,
         amount: amount,
         createdBy: user?.primaryEmailAddress?.emailAddress,
         icon: emojiIcon,
       })
-      .returning({ insertedId: Incomes.id });
+      .returning({ insertedId: revenueStreams.id });
 
     if (result) {
       refreshData();
-      toast("New Income Source Created!");
+      toast("New Revenue Stream Created!");
     }
   };
+
   return (
     <div>
       <Dialog>
@@ -56,12 +55,12 @@ function CreateIncomes({ refreshData }) {
             cursor-pointer hover:shadow-md"
           >
             <h2 className="text-3xl">+</h2>
-            <h2>Create New Income Source</h2>
+            <h2>Create New Revenue Stream</h2>
           </div>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create New Income Source</DialogTitle>
+            <DialogTitle>Create New Revenue Stream</DialogTitle>
             <DialogDescription>
               <div className="mt-5">
                 <Button
@@ -81,17 +80,17 @@ function CreateIncomes({ refreshData }) {
                   />
                 </div>
                 <div className="mt-2">
-                  <h2 className="text-black font-medium my-1">Source Name</h2>
+                  <h2 className="text-black font-medium my-1">Stream Name</h2>
                   <Input
-                    placeholder="e.g. Youtube"
+                    placeholder="e.g. SaaS Subscriptions"
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="mt-2">
-                  <h2 className="text-black font-medium my-1">Montly Amount</h2>
+                  <h2 className="text-black font-medium my-1">Monthly Amount</h2>
                   <Input
                     type="number"
-                    placeholder="e.g. ₹5000"
+                    placeholder="e.g. ₹50000"
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
@@ -105,7 +104,7 @@ function CreateIncomes({ refreshData }) {
                 onClick={() => onCreateIncomes()}
                 className="mt-5 w-full rounded-full bg-green-800"
               >
-                Create Income Source
+                Create Revenue Stream
               </Button>
             </DialogClose>
           </DialogFooter>

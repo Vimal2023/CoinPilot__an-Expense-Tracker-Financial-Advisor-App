@@ -1,40 +1,32 @@
-// utils/getFinancialAdvice.js
-import OpenAI from "openai";
-
-// Initialize the OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
-
-// Function to fetch user-specific data (mocked for this example)
-
-// Function to generate personalized financial advice
+/**
+ * getFinancialAdvice
+ *
+ * Client-side helper that fetches B2B financial insights from our
+ * server-side Groq API route (/api/financial-advice).
+ *
+ * Signature is identical to the previous OpenAI version so all
+ * existing callers (CardInfo.jsx, etc.) work without modification.
+ *
+ * @param {number} totalBudget  — sum of all Project Allocation amounts
+ * @param {number} totalIncome  — sum of all Revenue Stream amounts
+ * @param {number} totalSpend   — sum of all Operational Cost amounts
+ * @returns {Promise<string>}   — plain-text 2-sentence business advice
+ */
 const getFinancialAdvice = async (totalBudget, totalIncome, totalSpend) => {
-  console.log(totalBudget, totalIncome, totalSpend);
   try {
-    const userPrompt = `
-      Based on the following financial data:
-      - Total Budget: ₹{totalBudget} USD 
-      - Expenses: ₹{totalSpend} USD 
-      - Incomes: ₹{totalIncome} USD
-      Provide detailed financial advice in 2 sentence to help the user manage their finances more effectively.
-    `;
-
-    // Send the prompt to the OpenAI API
-    const chatCompletion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: userPrompt }],
+    const res = await fetch("/api/financial-advice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ totalBudget, totalIncome, totalSpend }),
     });
 
-    // Process and return the response
-    const advice = chatCompletion.choices[0].message.content;
+    if (!res.ok) throw new Error(`API responded with status ${res.status}`);
 
-    console.log(advice);
-    return advice;
+    const { advice } = await res.json();
+    return advice ?? "Financial insights are loading — please check back shortly.";
   } catch (error) {
-    console.error("Error fetching financial advice:", error);
-    return "Sorry, I couldn't fetch the financial advice at this moment. Please try again later.";
+    console.error("[getFinancialAdvice] Failed to fetch advice:", error);
+    return "Unable to load financial insights right now. Ensure your GROQ_API_KEY is set and try again.";
   }
 };
 

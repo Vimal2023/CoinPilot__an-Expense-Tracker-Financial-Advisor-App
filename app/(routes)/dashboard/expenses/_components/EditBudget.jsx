@@ -16,16 +16,15 @@ import EmojiPicker from "emoji-picker-react";
 import { useUser } from "@clerk/nextjs";
 import { Input } from "@/components/ui/input";
 import { db } from "@/utils/dbConfig";
-import { Budgets } from "@/utils/schema";
+import { projectAllocations } from "@/utils/schema";
 import { eq } from "drizzle-orm";
 import { toast } from "sonner";
+
 function EditBudget({ budgetInfo, refreshData }) {
   const [emojiIcon, setEmojiIcon] = useState(budgetInfo?.icon);
   const [openEmojiPicker, setOpenEmojiPicker] = useState(false);
-
   const [name, setName] = useState();
   const [amount, setAmount] = useState();
-
   const { user } = useUser();
 
   useEffect(() => {
@@ -35,22 +34,20 @@ function EditBudget({ budgetInfo, refreshData }) {
       setName(budgetInfo.name);
     }
   }, [budgetInfo]);
+
   const onUpdateBudget = async () => {
     const result = await db
-      .update(Budgets)
-      .set({
-        name: name,
-        amount: amount,
-        icon: emojiIcon,
-      })
-      .where(eq(Budgets.id, budgetInfo.id))
+      .update(projectAllocations)
+      .set({ name: name, amount: amount, icon: emojiIcon })
+      .where(eq(projectAllocations.id, budgetInfo.id))
       .returning();
 
     if (result) {
       refreshData();
-      toast("Budget Updated!");
+      toast("Allocation Updated!");
     }
   };
+
   return (
     <div>
       <Dialog>
@@ -62,7 +59,7 @@ function EditBudget({ budgetInfo, refreshData }) {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Update Budget</DialogTitle>
+            <DialogTitle>Update Allocation</DialogTitle>
             <DialogDescription>
               <div className="mt-5">
                 <Button
@@ -82,19 +79,19 @@ function EditBudget({ budgetInfo, refreshData }) {
                   />
                 </div>
                 <div className="mt-2">
-                  <h2 className="text-black font-medium my-1">Budget Name</h2>
+                  <h2 className="text-black font-medium my-1">Allocation Name</h2>
                   <Input
-                    placeholder="e.g. Home Decor"
+                    placeholder="e.g. Q3 Marketing"
                     defaultValue={budgetInfo?.name}
                     onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="mt-2">
-                  <h2 className="text-black font-medium my-1">Budget Amount</h2>
+                  <h2 className="text-black font-medium my-1">Allocation Amount</h2>
                   <Input
                     type="number"
                     defaultValue={budgetInfo?.amount}
-                    placeholder="e.g. ₹5000"
+                    placeholder="e.g. ₹50000"
                     onChange={(e) => setAmount(e.target.value)}
                   />
                 </div>
@@ -108,7 +105,7 @@ function EditBudget({ budgetInfo, refreshData }) {
                 onClick={() => onUpdateBudget()}
                 className="mt-5 w-full rounded-full"
               >
-                Update Budget
+                Update Allocation
               </Button>
             </DialogClose>
           </DialogFooter>

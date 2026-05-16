@@ -1,6 +1,6 @@
-# CoinPilot
+# FinanSmart
 
-CoinPilot is an AI-driven personal finance advisor web application built with Next.js, Tailwind CSS, Shadcn UI, Clerk for authentication, Drizzle ORM with Neon for PostgreSQL database management, and Open AI's GPT-4 for financial advice. It allows users to track budgets, expenses, and income, visualize spending through charts, and receive personalized financial insights.
+FinanSmart is an AI-driven personal finance advisor web application built with Next.js, Tailwind CSS, Shadcn UI, Clerk for authentication, Drizzle ORM with Neon for PostgreSQL database management, and Open AI's GPT-4 for financial advice. It allows users to track budgets, expenses, and income, visualize spending through charts, and receive personalized financial insights.
 
 ## Features
 
@@ -13,36 +13,41 @@ CoinPilot is an AI-driven personal finance advisor web application built with Ne
 - **Responsive Design**: Built with Tailwind CSS and Shadcn UI for a polished, mobile-friendly interface.
 - **Database Integration**: Uses Drizzle ORM with Neon PostgreSQL for efficient data storage and retrieval.
 - **Visualizations**: Includes a bar chart (via `react-chart`) to visualize spending patterns.
+- **AI Bank Statement Parser**: Upload PDF bank statements to automatically extract, categorize, and draft transactions. Uses `pdf2json` for secure server-side text extraction and Groq's LLaMA 3.1 model to convert raw text into structured financial data. Parsed data is held in a 'pending' state for user review before syncing.
 
 ## Tech Stack
 
 - **Frontend**: Next.js, React, Tailwind CSS, Shadcn UI, Lucide React (icons), Aceternity UI (mockup)
 - **Backend**: Drizzle ORM, Neon (PostgreSQL)
 - **Authentication**: Clerk
-- **AI Integration**: Open AI API (GPT-4)
+- **AI Integration**: Open AI API (GPT-4) & Groq SDK (LLaMA-3.1-8b)
 - **Charts**: React Chart
-- **Others**: Framer Motion (animations), TypeScript/JavaScript
-
+- **Others**: Framer Motion (animations), TypeScript/JavaScript, pdf2json (for PDF text extraction)
 
 ## Installation
 
 1. **Clone the Repository**:
+
    ```bash
-   git clone https://github.com/your-username/coinpilot.git
-   cd coinpilot
+   git clone https://github.com/your-username/FinanSmart.git
+   cd FinanSmart
    ```
 
 2. **Install Dependencies**:
+
    ```bash
    npm install
    ```
+
    or
+
    ```bash
    yarn install
    ```
 
 3. **Set Up Environment Variables**:
    Create a `.env.local` file in the root directory and add the following:
+
    ```env
    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
    CLERK_SECRET_KEY=your_clerk_secret_key
@@ -52,17 +57,27 @@ CoinPilot is an AI-driven personal finance advisor web application built with Ne
    NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
    NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
    NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
+   GROQ_API_KEY=your_groq_api_key
    ```
+
    - Obtain `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` from the [Clerk Dashboard](https://dashboard.clerk.dev).
    - Get `NEXT_PUBLIC_DATABASE_URL` from the [Neon Console](https://console.neon.tech).
    - Acquire `NEXT_PUBLIC_OPEN_AI_API_KEY` from [Open AI](https://platform.openai.com).
+   - Acquire `GROQ_API_KEY` from the [Groq Console](https://console.groq.com).
 
 4. **Set Up Database**:
-   - Log in to [Neon Console](https://console.neon.tech) and create a new project (e.g., `coinpilot`).
+   - Log in to [Neon Console](https://console.neon.tech) and create a new project (e.g., `FinanSmart`).
    - Copy the database connection string and add it to `.env.local`.
    - Define the database schema in `utils/schema.jsx`:
+
      ```javascript
-     import { pgTable, serial, varchar, integer, numeric } from "drizzle-orm/pg-core";
+     import {
+       pgTable,
+       serial,
+       varchar,
+       integer,
+       numeric,
+     } from "drizzle-orm/pg-core";
 
      export const budget = pgTable("budget", {
        id: serial("id").primaryKey(),
@@ -88,7 +103,17 @@ CoinPilot is an AI-driven personal finance advisor web application built with Ne
        budgetId: integer("budgetId").references(() => budget.id),
        createdAt: varchar("createdAt"),
      });
+
+     export const rawStatements = pgTable("raw_statements", {
+       id: serial("id").primaryKey(),
+       fileName: varchar("fileName").notNull(),
+       parsedData: varchar("parsedData").notNull(), // Stores stringified JSON
+       status: varchar("status").default("pending"),
+       createdBy: varchar("createdBy").notNull(),
+       uploadedAt: varchar("uploadedAt").default("now()"),
+     });
      ```
+
    - Push the schema to Neon:
      ```bash
      npm run db:push
@@ -104,6 +129,6 @@ CoinPilot is an AI-driven personal finance advisor web application built with Ne
    ```
    Open `http://localhost:3000` in your browser to view the app.
 
-recharts.org) for data visualization.
+- [Recharts](https://recharts.org) for data visualization.
 - [Aceternity UI](https://ui.aceternity.com) for tablet mockup.
 - [Lucide React](https://lucide.dev) for icons.

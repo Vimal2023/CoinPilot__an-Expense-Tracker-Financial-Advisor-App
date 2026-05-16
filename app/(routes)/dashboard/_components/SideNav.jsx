@@ -1,5 +1,5 @@
 // ✅ New imports
-import React, { useEffect, useState } from "react"; // <-- useState add kiya
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   LayoutGrid,
@@ -7,14 +7,15 @@ import {
   ReceiptText,
   ShieldCheck,
   CircleDollarSign,
-  Menu, // <-- Hamburger icon import
+  Sparkles,
+  Menu,
 } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 function SideNav() {
-  const [isOpen, setIsOpen] = useState(false); // <-- sidebar toggle state
+  const [isOpen, setIsOpen] = useState(false);
 
   const menuList = [
     {
@@ -25,24 +26,30 @@ function SideNav() {
     },
     {
       id: 2,
-      name: "Incomes",
+      name: "Revenue Streams",
       icon: CircleDollarSign,
       path: "/dashboard/incomes",
     },
     {
       id: 3,
-      name: "Budgets",
+      name: "Allocations",
       icon: PiggyBank,
       path: "/dashboard/budgets",
     },
     {
       id: 4,
-      name: "Expenses",
+      name: "Op. Costs",
       icon: ReceiptText,
       path: "/dashboard/expenses",
     },
     {
       id: 5,
+      name: "AI Parser",
+      icon: Sparkles,
+      path: "/dashboard/automation",
+    },
+    {
+      id: 6,
       name: "Upgrade",
       icon: ShieldCheck,
       path: "/dashboard/upgrade",
