@@ -20,7 +20,7 @@ FinanSmart is an AI-driven personal finance advisor web application built with N
 - **Frontend**: Next.js, React, Tailwind CSS, Shadcn UI, Lucide React (icons), Aceternity UI (mockup)
 - **Backend**: Drizzle ORM, Neon (PostgreSQL)
 - **Authentication**: Clerk
-- **AI Integration**: Open AI API (GPT-4) & Groq SDK (LLaMA-3.1-8b)
+- **AI Integration**: Groq SDK (LLaMA-3.1-8b)
 - **Charts**: React Chart
 - **Others**: Framer Motion (animations), TypeScript/JavaScript, pdf2json (for PDF text extraction)
 
